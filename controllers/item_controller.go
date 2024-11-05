@@ -1,30 +1,30 @@
 package controllers
 
 import (
-	"go-gin-udemy/services"
-	"net-http"
+    "go-gin-udemy/services"
+    "net/http"
 
-	"github.com/gin-gonic/gin"
+    "github.com/gin-gonic/gin"
 )
 
 type IItemController interface {
-	FindAll(ctx *gin.Context)
+    FindAll(ctx *gin.Context)
 }
 
 type ItemController struct {
-	service services.IItemService
+    service services.IItemServices
 }
 
-func NewItemMemoryController(service services.IItemService) IItemController {
-	return &ItemController{service: service}
+func NewItemController(service services.IItemServices) IItemController {  // 名前を修正
+    return &ItemController{service: service}
 }
 
-func (C *ItemController) FindAll(ctx *gin.Context) {
-	items, err := c.service.FindAll()
-	if err != nil {
-		ctx.JSON(http.StatusInternalServiceError,gin.H{"error":"Unexpected error"})
-		return
-	}
+func (c *ItemController) FindAll(ctx *gin.Context) {
+    items, err := c.service.FindAll()
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Unexpected error"})
+        return
+    }
 
-	ctx.JSON(http.StatusOK,gin.H{"data": items})
-} 
+    ctx.JSON(http.StatusOK, gin.H{"data": items})
+}

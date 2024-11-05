@@ -1,22 +1,23 @@
 package services
 
 import (
-	"go-gin-udemy/models"
-	"go-gin-udemy/repositories"
+    "go-gin-udemy/models"
+    "go-gin-udemy/repositories"
 )
 
 type IItemServices interface {
-	FindAll() (*[]models.Item,error)
-} 
+    FindAll() (*[]models.Item, error)
+}
 
 type ItemServices struct {
-	repository repositories.IItemRepository
+    repository repositories.IItemRepository
 }
 
-func NewItemService(repository repositories.IItemRepository) IItemRepository {
-	return &ItemService(repository: repository)
+// NewItemService関数の戻り値の型をIItemServicesに変更
+func NewItemService(repository repositories.IItemRepository) IItemServices {
+    return &ItemServices{repository: repository}  // 正しい構造体リテラルの書き方
 }
 
-func  (s *ItemService) FindAll() (*[]models.Item,error) {
-	return s.repositories.FindAll()
+func (s *ItemServices) FindAll() (*[]models.Item, error) {
+    return s.repository.FindAll()
 }
