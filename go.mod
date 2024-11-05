@@ -1,4 +1,4 @@
-module gin-fleamarket
+module go-gin-udemy
 
 go 1.23.1
 
