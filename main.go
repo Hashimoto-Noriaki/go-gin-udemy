@@ -8,11 +8,12 @@ func main() {
 		{ID: 2, Name: "商品2",Price: 2000, Description: "説明2",SoldOut: true},
 		{ID: 3, Name: "商品3",Price: 3000, Description: "説明3",SoldOut: false}
 	}
+
+	itemRepository := repositories.NewItemMemoryRepository(items)
+	ItemService := services.NewItemService(itemRepository)
+	ItemController := controllers.NewItemController(ItemServer)
+
 	r := gin.Default()//これはHTTPリクエストを処理
-	r.GET("/sample", func(c *gin.Context) {//ルーターにクライアントのリクエスト先となるエンドポイントを追加
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	r.GET("/items", ItemController.FindAll)//ルーターにクライアントのリクエスト先となるエンドポイントを追加
 	r.Run("localhost:8080")
 }
