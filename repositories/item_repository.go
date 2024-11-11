@@ -5,6 +5,7 @@ import "go-gin-udemy/models";
 type IItemRepository interface {
 	//repositoryが満たすべきメソッドを定義
 	FindAll() (*[]models.Item,error)//*[]models.Item：商品情報のリスト（Item構造体のスライス）へのポインタ。
+	FindById(itemId unit) (*models.Item, error)
 }
 //temMemoryRepositoryはメモリ上でデータを保持するための構造体。フィールドitemsに、商品情報を格納するスライス[]models.Itemが定義
 type ItemMemoryRepository struct {
@@ -20,5 +21,9 @@ func NewItemMemoryRepository(items []models.Item) IItemRepository {
 //構造体内のitemsスライスをポインタで返す。
 //戻り値の型は*[]models.Item（Itemのリストへのポインタ）とerrorで、エラーは発生しないのでnilを返しています。
 func (r *ItemMemoryRepository) FindAll() (*[]models.Item,error){
+	return &r.items,nil
+}
+
+func (r *ItemMemoryRepository) FindAll()(*[]models.Item,error){
 	return &r.items,nil
 }
