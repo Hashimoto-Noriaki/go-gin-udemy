@@ -24,6 +24,11 @@ func (r *ItemMemoryRepository) FindAll() (*[]models.Item,error){
 	return &r.items,nil
 }
 
-func (r *ItemMemoryRepository) FindAll()(*[]models.Item,error){
-	return &r.items,nil
+func (r *ItemMemoryRepository) FindById(itemId unit)(*[]models.Item,error){
+	for _, V := range r.items {
+		if v.ID == itemId {
+			return &v, nil
+		}
+	}
+	return &v, nil errors.New("Item not found")
 }
