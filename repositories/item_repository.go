@@ -1,34 +1,38 @@
 package repositories
 
-import "go-gin-udemy/models";
-//インターフェース IItemRepository の定義。 IItemRepositoryインターフェースは、リポジトリが満たすべきメソッドを定義。この場合、商品データを全て取得するメソッドFindAllのみが定義
+import (
+	"errors"
+	"go-gin-udemy/models"
+)
+
+// インターフェース IItemRepository の定義。
 type IItemRepository interface {
-	//repositoryが満たすべきメソッドを定義
-	FindAll() (*[]models.Item,error)//*[]models.Item：商品情報のリスト（Item構造体のスライス）へのポインタ。
-	FindById(itemId unit) (*models.Item, error)
+	// repositoryが満たすべきメソッドを定義
+	FindAll() (*[]models.Item, error)               // 商品情報のリスト（Item構造体のスライス）へのポインタ
+	FindById(itemId int) (*models.Item, error) // itemIdの型をintに設定
 }
-//temMemoryRepositoryはメモリ上でデータを保持するための構造体。フィールドitemsに、商品情報を格納するスライス[]models.Itemが定義
+
+// ItemMemoryRepositoryはメモリ上でデータを保持するための構造体
 type ItemMemoryRepository struct {
 	items []models.Item
 }
-//ItemMemoryRepositoryのインスタンスを生成して返すコンストラクタ関数。
-//itemsスライスを引数として受け取り、そのスライスをItemMemoryRepository構造体のフィールドに設定。
-//この関数は、IItemRepositoryインターフェースを返すので、他のパッケージでIItemRepositoryインターフェースとして扱う
+
+// ItemMemoryRepositoryのインスタンスを生成して返すコンストラクタ関数。
 func NewItemMemoryRepository(items []models.Item) IItemRepository {
-    return &ItemMemoryRepository{items: items}
-}
-//FindAllメソッドは、ItemMemoryRepository構造体のメソッド。
-//構造体内のitemsスライスをポインタで返す。
-//戻り値の型は*[]models.Item（Itemのリストへのポインタ）とerrorで、エラーは発生しないのでnilを返しています。
-func (r *ItemMemoryRepository) FindAll() (*[]models.Item,error){
-	return &r.items,nil
+	return &ItemMemoryRepository{items: items}
 }
 
-func (r *ItemMemoryRepository) FindById(itemId unit)(*[]models.Item,error){
-	for _, V := range r.items {
-		if v.ID == itemId {
+// FindAllメソッドは、ItemMemoryRepository構造体のメソッド。
+func (r *ItemMemoryRepository) FindAll() (*[]models.Item, error) {
+	return &r.items, nil
+}
+
+// FindByIdメソッドは、指定されたIDのItemを返します
+func (r *ItemMemoryRepository) FindById(itemId int) (*models.Item, error) {
+	for _, v := range r.items {
+		if int(v.ID) == itemId { // v.IDをintにキャストして比較
 			return &v, nil
 		}
 	}
-	return &v, nil errors.New("Item not found")
+	return nil, errors.New("Item not found")
 }
