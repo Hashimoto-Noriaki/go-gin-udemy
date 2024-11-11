@@ -22,5 +22,6 @@ func main() {
 
     r := gin.Default() // GinのデフォルトのHTTPルーターを作成
     r.GET("/items", itemController.FindAll) // エンドポイントを追加
+    r.GET("/items/:id",itemController.FindById)
     r.Run("localhost:8080")
 }
