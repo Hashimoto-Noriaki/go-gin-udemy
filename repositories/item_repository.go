@@ -40,7 +40,7 @@ func (r *ItemMemoryRepository) FindById(itemId int) (*models.Item, error) {
 
 // FindAllメソッドは、ItemMemoryRepository構造体のメソッド。
 func (r *ItemMemoryRepository) Create(newItem models.Item)(*models.Item,error){
-	newItem.ID = unit(len(r.items) + 1)
+	newItem.ID = uint(len(r.items) + 1)
 	r.items = append(r.items,newItem)
 	return &newItem, nil
 }

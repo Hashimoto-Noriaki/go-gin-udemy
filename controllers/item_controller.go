@@ -2,6 +2,7 @@ package controllers
 
 import (
     "go-gin-udemy/services"
+    "go-gin-udemy/dto"
     "net/http"
     "strconv"
 
@@ -37,15 +38,13 @@ func (c *ItemController) FindAll(ctx *gin.Context) {
 
 // FindById メソッドの実装
 func (c *ItemController) FindById(ctx *gin.Context) {
-    // URL パラメータ "id" を取得
-    itemId, err := strconv.Atoi(ctx.Param("id")) // 修正: ctx.Param を使用し strconv.Atoi に変更
+    itemId, err := strconv.Atoi(ctx.Param("id"))
     if err != nil {
         ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
         return 
     }
 
-    // サービスからアイテムを取得
-    item, err := c.service.FindById(itemId) // 修正: itemIdの型をintに
+    item, err := c.service.FindById(itemId)
     if err != nil {
         if err.Error() == "Item not found" {
             ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -57,10 +56,11 @@ func (c *ItemController) FindById(ctx *gin.Context) {
     ctx.JSON(http.StatusOK, gin.H{"data": item})
 }
 
+// Create メソッドの実装
 func (c *ItemController) Create(ctx *gin.Context) {
-    var input dto.CreateItemInput
+    var input dto.CreateItemInput // dto パッケージを使用
     if err := ctx.ShouldBindJSON(&input); err != nil {
-        ctx.JSON(http.StatusBadRequest,gin.H{"error": err.Error()})
+        ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
     newItem, err := c.service.Create(input)
@@ -68,6 +68,5 @@ func (c *ItemController) Create(ctx *gin.Context) {
         ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
-
     ctx.JSON(http.StatusCreated, gin.H{"data": newItem})
 }
