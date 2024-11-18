@@ -9,8 +9,9 @@ import (
 // サービスのインターフェース定義
 type IItemServices interface {
     FindAll() (*[]models.Item, error)
-    FindById(itemId int) (*models.Item, error) 
-    Create(createItemInput dto.CreateItemInput) (*models.Item, error) // 修正: 引数名を小文字開始に変更
+    FindById(itemId uint) (*models.Item, error) // 引数を uint に修正
+    Create(createItemInput dto.CreateItemInput) (*models.Item, error)
+    Update(itemId uint, updateItemInput dto.UpdateItemInput) (*models.Item, error)
 }
 
 // サービスの構造体定義
@@ -29,12 +30,12 @@ func (s *ItemServices) FindAll() (*[]models.Item, error) {
 }
 
 // FindByIdメソッドの定義
-func (s *ItemServices) FindById(itemId int) (*models.Item, error) {
+func (s *ItemServices) FindById(itemId uint) (*models.Item, error) {
     return s.repository.FindById(itemId)
 }
 
 // Createメソッドの定義
-func (s *ItemServices) Create(createItemInput dto.CreateItemInput) (*models.Item, error) { // 引数名を修正
+func (s *ItemServices) Create(createItemInput dto.CreateItemInput) (*models.Item, error) {
     newItem := models.Item{
         Name:        createItemInput.Name,
         Price:       createItemInput.Price,
@@ -42,4 +43,36 @@ func (s *ItemServices) Create(createItemInput dto.CreateItemInput) (*models.Item
         SoldOut:     false,
     }
     return s.repository.Create(newItem)
+}
+
+// Updateメソッドの定義
+func (s *ItemServices) Update(itemId uint, updateItemInput dto.UpdateItemInput) (*models.Item, error) {
+    // itemId を使ってアイテムを取得
+    targetItem, err := s.FindById(itemId)
+    if err != nil {
+        return nil, err
+    }
+
+    // Name の更新
+    if updateItemInput.Name != nil {
+        targetItem.Name = *updateItemInput.Name
+    }
+
+    // Price の更新
+    if updateItemInput.Price != 0 { // nil チェックを適切に行う
+        targetItem.Price = updateItemInput.Price
+    }
+
+    // Description の更新
+    if updateItemInput.Description != "" { // nil チェックを適切に行う
+        targetItem.Description = updateItemInput.Description
+    }
+
+    // SoldOut の更新
+    if updateItemInput.SoldOut != nil { // ポインタ型で値が nil でないことを確認
+        targetItem.SoldOut = *updateItemInput.SoldOut
+    }
+
+    // 更新されたアイテムを返す
+    return s.repository.Update(*targetItem)
 }
