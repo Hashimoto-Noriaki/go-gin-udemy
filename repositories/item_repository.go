@@ -9,8 +9,9 @@ import (
 type IItemRepository interface {
 	// repositoryが満たすべきメソッドを定義
 	FindAll() (*[]models.Item, error)               // 商品情報のリスト（Item構造体のスライス）へのポインタ
-	FindById(itemId int) (*models.Item, error) // itemIdの型をintに設定
+	FindById(itemId uint) (*models.Item, error) // itemIdの型をintに設定
 	Create(newItem models.Item)(*models.Item,error)
+	Update(updateItem models.Item)(*models.Item,error)
 }
 
 // ItemMemoryRepositoryはメモリ上でデータを保持するための構造体
@@ -29,9 +30,9 @@ func (r *ItemMemoryRepository) FindAll() (*[]models.Item, error) {
 }
 
 // FindByIdメソッドは、指定されたIDのItemを返します
-func (r *ItemMemoryRepository) FindById(itemId int) (*models.Item, error) {
+func (r *ItemMemoryRepository) FindById(itemId uint) (*models.Item, error) {
 	for _, v := range r.items {
-		if int(v.ID) == itemId { // v.IDをintにキャストして比較
+		if uint(v.ID) == itemId { // v.IDをintにキャストして比較
 			return &v, nil
 		}
 	}
@@ -43,4 +44,14 @@ func (r *ItemMemoryRepository) Create(newItem models.Item)(*models.Item,error){
 	newItem.ID = uint(len(r.items) + 1)
 	r.items = append(r.items,newItem)
 	return &newItem, nil
+}
+
+func (r *ItemMemoryRepository) Update(updateItem models.Item)(*models.Item,error){
+	for i,v := range r.items {
+		if v.ID == updateItem.ID {
+			r.items[i] = updateItem
+			return &r.items[i],nil
+		}
+	}
+	return nil, errors.New("Unexpected error")
 }
