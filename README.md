@@ -16,6 +16,10 @@ docker compose up -d
 
 https://github.com/air-verse/air
 
+### GORMドキュメント
+
+https://gorm.io/ja_JP/docs/index.html#%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB
+
 ### validationのドキュメント
 
 https://pkg.go.dev/github.com/go-playground/validator/v10#section-readme
