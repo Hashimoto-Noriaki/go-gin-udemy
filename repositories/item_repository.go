@@ -12,6 +12,7 @@ type IItemRepository interface {
 	FindById(itemId uint) (*models.Item, error) // itemIdの型をintに設定
 	Create(newItem models.Item)(*models.Item,error)
 	Update(updateItem models.Item)(*models.Item,error)
+	Delete(itemId uint) error
 }
 
 // ItemMemoryRepositoryはメモリ上でデータを保持するための構造体
@@ -54,4 +55,14 @@ func (r *ItemMemoryRepository) Update(updateItem models.Item)(*models.Item,error
 		}
 	}
 	return nil, errors.New("Unexpected error")
+}
+
+func (r *ItemMemoryRepository) Delete(itemId uint) error {
+	for i,v := range r.items {
+		if v.ID == itemId {
+			r.items = append(r.items[:i], r.items[i+1:]...)
+			return nil
+		}
+	}
+	return errors.New("Item not found")
 }
