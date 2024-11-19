@@ -1,3 +1,17 @@
+### サーバー起動
+```
+go run main.go
+```
+
+### pgAdmin
+
+- http://localhost:81/
+
+### docker起動
+```
+docker compose up -d
+```
+
 ### air
 
 https://github.com/air-verse/air
