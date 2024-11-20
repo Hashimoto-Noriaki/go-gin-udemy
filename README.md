@@ -16,6 +16,11 @@ docker compose up -d
 
 https://github.com/air-verse/air
 
+### tidy
+```
+ go mod tidy
+```
+
 ### GORMドキュメント
 
 https://gorm.io/ja_JP/docs/index.html#%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB
