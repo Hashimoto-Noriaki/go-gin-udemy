@@ -1,23 +1,25 @@
 package infra
 
-import(
-	"fmt"
+import (
+    "fmt"
+    "os"
 
-	"gorm.io/gorm"
-) 
+    "gorm.io/driver/postgres"
+    "gorm.io/gorm"
+)
 
 func SetupDB() *gorm.DB {
-	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Tokyo",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_NAME"),
-		os.Getenv("DB_PORT"),
-	)
-	db, err := gorm.Open(postgress.Open(dsn),&gorm.Config{})
-	if err != nil {
-		panic("Failed to connect database")
-	}
-	return db
+    dsn := fmt.Sprintf(
+        "host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Tokyo",
+        os.Getenv("DB_HOST"),
+        os.Getenv("DB_USER"),
+        os.Getenv("DB_PASSWORD"),
+        os.Getenv("DB_NAME"),
+        os.Getenv("DB_PORT"),
+    )
+    db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{}) // 修正: postgres.Open
+    if err != nil {
+        panic("Failed to connect database")
+    }
+    return db
 }
