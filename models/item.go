@@ -1,9 +1,11 @@
-package	models
+package models
+
+import "gorm.io/gorm"
 
 type Item struct {
-	ID uint
-	Name string
-	Price uint
-	Description string
-	SoldOut bool
-} 
+    gorm.Model
+    Name        string `gorm:"not null"`
+    Price       uint  `gorm:"not null"`
+    Description string
+    SoldOut     bool `gorm:"not null;default:false"`
+}
