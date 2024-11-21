@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"errors"
 	"go-gin-udemy/models"
 	"gorm.io/gorm"
 )
@@ -18,14 +19,12 @@ type ItemRepository struct {
 	db *gorm.DB
 }
 
-// NewItemRepository 関数（関数名が間違っている可能性があるので確認）
+// NewItemRepository 関数
 func NewItemRepository(db *gorm.DB) IItemRepository {
 	return &ItemRepository{db: db}
 }
 
-// それぞれのメソッドを実装
-
-//DBからのデータ取得処理の実装
+// DBから全データ取得
 func (r *ItemRepository) FindAll() (*[]models.Item, error) {
 	var items []models.Item
 	result := r.db.Find(&items)
@@ -35,15 +34,20 @@ func (r *ItemRepository) FindAll() (*[]models.Item, error) {
 	return &items, nil
 }
 
+// IDに基づくデータ取得
 func (r *ItemRepository) FindById(itemId uint) (*models.Item, error) {
 	var item models.Item
 	result := r.db.First(&item, itemId)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) { // gorm.ErrRecordNotFoundをチェック
+		return nil, errors.New("Item not found")
+	}
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return &item, nil
 }
 
+// データの作成
 func (r *ItemRepository) Create(newItem models.Item) (*models.Item, error) {
 	result := r.db.Create(&newItem)
 	if result.Error != nil {
@@ -52,6 +56,7 @@ func (r *ItemRepository) Create(newItem models.Item) (*models.Item, error) {
 	return &newItem, nil
 }
 
+// データの更新
 func (r *ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
 	result := r.db.Save(&updateItem)
 	if result.Error != nil {
@@ -60,8 +65,12 @@ func (r *ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
 	return &updateItem, nil
 }
 
+// データの削除
 func (r *ItemRepository) Delete(itemId uint) error {
 	result := r.db.Delete(&models.Item{}, itemId)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) { // 存在しない場合のエラーチェック
+		return errors.New("Item not found")
+	}
 	if result.Error != nil {
 		return result.Error
 	}
