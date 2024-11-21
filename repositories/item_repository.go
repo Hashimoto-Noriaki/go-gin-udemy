@@ -24,6 +24,8 @@ func NewItemRepository(db *gorm.DB) IItemRepository {
 }
 
 // それぞれのメソッドを実装
+
+//DBからのデータ取得処理の実装
 func (r *ItemRepository) FindAll() (*[]models.Item, error) {
 	var items []models.Item
 	result := r.db.Find(&items)
