@@ -1,68 +1,67 @@
 package repositories
 
 import (
-	"errors"
 	"go-gin-udemy/models"
+	"gorm.io/gorm"
 )
 
-// インターフェース IItemRepository の定義。
+// IItemRepository インターフェースの定義
 type IItemRepository interface {
-	// repositoryが満たすべきメソッドを定義
-	FindAll() (*[]models.Item, error)               // 商品情報のリスト（Item構造体のスライス）へのポインタ
-	FindById(itemId uint) (*models.Item, error) // itemIdの型をintに設定
-	Create(newItem models.Item)(*models.Item,error)
-	Update(updateItem models.Item)(*models.Item,error)
+	FindAll() (*[]models.Item, error)
+	FindById(itemId uint) (*models.Item, error)
+	Create(newItem models.Item) (*models.Item, error)
+	Update(updateItem models.Item) (*models.Item, error)
 	Delete(itemId uint) error
 }
 
-// ItemMemoryRepositoryはメモリ上でデータを保持するための構造体
-type ItemMemoryRepository struct {
-	items []models.Item
+type ItemRepository struct {
+	db *gorm.DB
 }
 
-// ItemMemoryRepositoryのインスタンスを生成して返すコンストラクタ関数。
-func NewItemMemoryRepository(items []models.Item) IItemRepository {
-	return &ItemMemoryRepository{items: items}
+// NewItemRepository 関数（関数名が間違っている可能性があるので確認）
+func NewItemRepository(db *gorm.DB) IItemRepository {
+	return &ItemRepository{db: db}
 }
 
-// FindAllメソッドは、ItemMemoryRepository構造体のメソッド。
-func (r *ItemMemoryRepository) FindAll() (*[]models.Item, error) {
-	return &r.items, nil
-}
-
-// FindByIdメソッドは、指定されたIDのItemを返します
-func (r *ItemMemoryRepository) FindById(itemId uint) (*models.Item, error) {
-	for _, v := range r.items {
-		if uint(v.ID) == itemId { // v.IDをintにキャストして比較
-			return &v, nil
-		}
+// それぞれのメソッドを実装
+func (r *ItemRepository) FindAll() (*[]models.Item, error) {
+	var items []models.Item
+	result := r.db.Find(&items)
+	if result.Error != nil {
+		return nil, result.Error
 	}
-	return nil, errors.New("Item not found")
+	return &items, nil
 }
 
-// FindAllメソッドは、ItemMemoryRepository構造体のメソッド。
-func (r *ItemMemoryRepository) Create(newItem models.Item)(*models.Item,error){
-	newItem.ID = uint(len(r.items) + 1)
-	r.items = append(r.items,newItem)
+func (r *ItemRepository) FindById(itemId uint) (*models.Item, error) {
+	var item models.Item
+	result := r.db.First(&item, itemId)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &item, nil
+}
+
+func (r *ItemRepository) Create(newItem models.Item) (*models.Item, error) {
+	result := r.db.Create(&newItem)
+	if result.Error != nil {
+		return nil, result.Error
+	}
 	return &newItem, nil
 }
 
-func (r *ItemMemoryRepository) Update(updateItem models.Item)(*models.Item,error){
-	for i,v := range r.items {
-		if v.ID == updateItem.ID {
-			r.items[i] = updateItem
-			return &r.items[i],nil
-		}
+func (r *ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
+	result := r.db.Save(&updateItem)
+	if result.Error != nil {
+		return nil, result.Error
 	}
-	return nil, errors.New("Unexpected error")
+	return &updateItem, nil
 }
 
-func (r *ItemMemoryRepository) Delete(itemId uint) error {
-	for i,v := range r.items {
-		if v.ID == itemId {
-			r.items = append(r.items[:i], r.items[i+1:]...)
-			return nil
-		}
+func (r *ItemRepository) Delete(itemId uint) error {
+	result := r.db.Delete(&models.Item{}, itemId)
+	if result.Error != nil {
+		return result.Error
 	}
-	return errors.New("Item not found")
+	return nil
 }
