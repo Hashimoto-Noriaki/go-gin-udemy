@@ -56,7 +56,7 @@ func (r *ItemRepository) Create(newItem models.Item) (*models.Item, error) {
 	return &newItem, nil
 }
 
-// データの更新
+// データの更新の実装
 func (r *ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
 	result := r.db.Save(&updateItem)
 	if result.Error != nil {
