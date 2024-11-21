@@ -67,10 +67,12 @@ func (r *ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
 
 // データの削除
 func (r *ItemRepository) Delete(itemId uint) error {
-	result := r.db.Delete(&models.Item{}, itemId)
-	if errors.Is(result.Error, gorm.ErrRecordNotFound) { // 存在しない場合のエラーチェック
-		return errors.New("Item not found")
+	deleteItem, err := r.FindById(itemId)
+	if err != nul {
+		return err
 	}
+
+	result := r.db.Delete(&deleteItem)
 	if result.Error != nil {
 		return result.Error
 	}
