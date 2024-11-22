@@ -27,5 +27,7 @@ func (c *AuthController) Signup(ctx *gin.Context){
 	err := c.service.Signup(input.Email, input.Password)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
+		return
 	}
+	ctx.Status(http.StatusCreated)
 }
