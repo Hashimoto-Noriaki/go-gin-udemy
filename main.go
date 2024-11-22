@@ -25,12 +25,20 @@ func main() {
     itemService := services.NewItemService(itemRepository)
     itemController := controllers.NewItemController(itemService)
 
+    authRepository := repositories.NewAuthRepository(db)
+    authService := services.NewAuthService(authRepository)
+    authController := controllers.NewAuthController(authService)
+
     r := gin.Default() // GinのデフォルトのHTTPルーターを作成
     itemRouter := r.Group("/items")
+    authRouter := r.Group("/auth")
+
     r.GET("", itemController.FindAll) // エンドポイントを追加
     r.GET("/:id",itemController.FindById)
     r.POST("",itemController.Create)
     r.PUT("/:id",itemController.Update)
     r.DELETE("/:id",itemController.Delete)
+
+    authRouter.POST("/signup", authController.Signup)
     r.Run("localhost:8080")
 }
