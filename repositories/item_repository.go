@@ -68,7 +68,7 @@ func (r *ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
 // データの削除
 func (r *ItemRepository) Delete(itemId uint) error {
 	deleteItem, err := r.FindById(itemId)
-	if err != nul {
+	if err != nil {
 		return err
 	}
 

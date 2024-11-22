@@ -1,6 +1,10 @@
 package services
 
-import "go-gin-udemy/repositories"
+import (
+	"go-gin-udemy/models"
+	"go-gin-udemy/repositories"
+	"golang.org/x/crypto/bcrypt"
+)
 
 type IAuthService interface {
 	Signup(email string, password string) error 

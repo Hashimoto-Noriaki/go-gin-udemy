@@ -1,5 +1,11 @@
 package repositories
 
+import (
+	"go-gin-udemy/models"
+
+	"gorm.io/gorm"
+)
+
 type IAuthRepository interface {
 	CreateUser(user models.User) error
 }
@@ -12,7 +18,7 @@ func NewAuthRepository(db *gorm.DB)  IAuthRepository {
 	return &AuthRepository{db: db}
 }
 
-func (r *AuthRepository)  CreateUser(user models.user) error {
+func (r *AuthRepository)  CreateUser(user models.User) error {
 	result :=  r.db.Create(&user)
 	if result.Error != nil {
 		return result.Error
