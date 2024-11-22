@@ -26,4 +26,3 @@ func (s *AuthService) Signup(email string, password string) error {
 	}
 	return s.repository.CreateUser(user)
 }
-
