@@ -32,3 +32,7 @@ https://pkg.go.dev/github.com/go-playground/validator/v10#section-readme
 ### Goのgodenv
 
 https://github.com/joho/godotenv#installation
+
+### jwt
+
+https://github.com/golang-jwt/jwt?tab=readme-ov-file#installation-guidelines
