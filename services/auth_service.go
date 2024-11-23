@@ -32,7 +32,7 @@ func (s *AuthService) Signup(email string, password string) error {
 	return s.repository.CreateUser(user)
 }
 
-func (s *AuthService) Login(email string, password string) (*string error){
+func (s *AuthService) Login(email string, password string) (*string, error){
 	foundUser, err := s.repository.FindUser(email)
 	if err != nil {
 		return nil, err

@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"errors"
 	"go-gin-udemy/models"
 
 	"gorm.io/gorm"
