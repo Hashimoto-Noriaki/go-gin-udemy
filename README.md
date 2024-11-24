@@ -36,3 +36,10 @@ https://github.com/joho/godotenv#installation
 ### jwt
 
 https://github.com/golang-jwt/jwt?tab=readme-ov-file#installation-guidelines
+
+### jwt Debbuger
+
+https://jwt.io/
+
+
+
