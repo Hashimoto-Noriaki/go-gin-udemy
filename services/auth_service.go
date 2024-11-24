@@ -4,6 +4,7 @@ import (
 	"go-gin-udemy/models"
 	"go-gin-udemy/repositories"
 	"time"
+	"os"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -35,7 +36,7 @@ func (s *AuthService) Signup(email string, password string) error {
 	return s.repository.CreateUser(user)
 }
 
-func (s *AuthService) Login(email string, password string) (*string, error){
+func (s *AuthService) Login(email string, password string) (*string, error) {
 	foundUser, err := s.repository.FindUser(email)
 	if err != nil {
 		return nil, err
@@ -51,8 +52,10 @@ func (s *AuthService) Login(email string, password string) (*string, error){
 		return nil, err
 	}
 
-	return &foundUser.Email,nil
+	// トークンを返す
+	return token, nil
 }
+
 
 func CreateToken(userId uint, email string)(*string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
