@@ -23,12 +23,14 @@ func main() {
 
     r := gin.Default()
 
+    itemRouterWithAuth := r.Group("/items",middlewares.AuthMiddleware(authService))
+
     // /items のルートをグループ化
     itemRouter := r.Group("/items")
     {
-        itemRouter.GET("", itemController.FindAll)     // itemRouter を利用
+        itemRouter.GET("", itemController.FindAll)
         itemRouter.GET("/:id", itemController.FindById)
-        itemRouter.POST("", itemController.Create)
+        itemRouterWithAuth.POST("", itemController.Create)
         itemRouter.PUT("/:id", itemController.Update)
         itemRouter.DELETE("/:id", itemController.Delete)
     }
