@@ -9,9 +9,9 @@ import (
 // サービスのインターフェース定義
 type IItemServices interface {
     FindAll() (*[]models.Item, error)
-    FindById(itemId uint, userId uint) (*models.Item, error) // 引数を uint に修正
+    FindById(itemId uint, userId uint) (*models.Item, error)
     Create(createItemInput dto.CreateItemInput, userId uint) (*models.Item, error)
-    Update(itemId uint, updateItemInput dto.UpdateItemInput) (*models.Item, error)
+    Update(itemId uint, userId uint,updateItemInput dto.UpdateItemInput) (*models.Item, error)
     Delete(itemId uint) error
 }
 
@@ -48,9 +48,9 @@ func (s *ItemServices) Create(createItemInput dto.CreateItemInput, userId uint) 
 }
 
 // Updateメソッドの定義
-func (s *ItemServices) Update(itemId uint, updateItemInput dto.UpdateItemInput) (*models.Item, error) {
+func (s *ItemServices) Update(itemId uint, userId uint,updateItemInput dto.UpdateItemInput) (*models.Item, error) {
     // itemId を使ってアイテムを取得
-    targetItem, err := s.FindById(itemId)
+    targetItem, err := s.FindById(itemId,userId)
     if err != nil {
         return nil, err
     }
