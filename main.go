@@ -28,6 +28,7 @@ func main() {
 
 	// Gin Engine
 	r := gin.Default()
+    r.Use(cors.Default())
 
 	// /items グループ化
 	itemRouterWithAuth := r.Group("/items", middlewares.AuthMiddleware(authService)) // AuthMiddleware を正しく適用
