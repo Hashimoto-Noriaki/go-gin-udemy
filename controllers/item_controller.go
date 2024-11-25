@@ -1,6 +1,7 @@
 package controllers
 
 import (
+    "go-gin-udemy/models"
     "go-gin-udemy/services"
     "go-gin-udemy/dto"
     "net/http"
@@ -64,12 +65,20 @@ func (c *ItemController) FindById(ctx *gin.Context) {
 
 // Create メソッドの実装
 func (c *ItemController) Create(ctx *gin.Context) {
+    user, exists := ctx.Get("user")
+    if !exists {
+        ctx.AbortWithStatus(http.StatusUnauthorized)
+        return
+    }
+
+    userId := user.(*models.User).ID
+
     var input dto.CreateItemInput // dto パッケージを使用
     if err := ctx.ShouldBindJSON(&input); err != nil {
         ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
-    newItem, err := c.service.Create(input)
+    newItem, err := c.service.Create(input,userId)
     if err != nil {
         ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return

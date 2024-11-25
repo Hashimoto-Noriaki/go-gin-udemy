@@ -5,6 +5,7 @@ import (
     "go-gin-udemy/services"
     "go-gin-udemy/controllers"
     "go-gin-udemy/infra"
+    "go-gin-udemy/middlewares"
 
     "github.com/gin-gonic/gin"
 )
@@ -13,32 +14,42 @@ func main() {
     infra.Initializer()
     db := infra.SetupDB()
 
+    // Repositories
     itemRepository := repositories.NewItemRepository(db)
-    itemService := services.NewItemService(itemRepository)
-    itemController := controllers.NewItemController(itemService)
-
     authRepository := repositories.NewAuthRepository(db)
+
+    // Services
+    itemService := services.NewItemService(itemRepository)
     authService := services.NewAuthService(authRepository)
+
+    // Controllers
+    itemController := controllers.NewItemController(itemService)
     authController := controllers.NewAuthController(authService)
 
+    // Gin Engine
     r := gin.Default()
 
-    // /items のルートをグループ化
-    itemRouter := r.Group("/items")
+    // /items グループ化
+    itemRouterWithAuth := r.Group("/items", middlewares.AuthMiddleware(authService)) // AuthMiddleware を正しく適用
     {
-        itemRouter.GET("", itemController.FindAll)     // itemRouter を利用
-        itemRouter.GET("/:id", itemController.FindById)
-        itemRouter.POST("", itemController.Create)
-        itemRouter.PUT("/:id", itemController.Update)
-        itemRouter.DELETE("/:id", itemController.Delete)
+        itemRouterWithAuth.POST("", itemController.Create) // 認証が必要なルート
+        itemRouterWithAuth.PUT("/:id", itemController.Update)
+        itemRouterWithAuth.DELETE("/:id", itemController.Delete)
     }
 
-    // /auth のルートをグループ化
+    itemRouter := r.Group("/items")
+    {
+        itemRouter.GET("", itemController.FindAll) // 認証不要なルート
+        itemRouter.GET("/:id", itemController.FindById)
+    }
+
+    // /auth グループ化
     authRouter := r.Group("/auth")
     {
         authRouter.POST("/signup", authController.Signup)
         authRouter.POST("/login", authController.Login)
     }
 
+    // サーバ起動
     r.Run("localhost:8080")
 }
