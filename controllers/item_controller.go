@@ -1,6 +1,7 @@
 package controllers
 
 import (
+    "go-gin-udemy/models"
     "go-gin-udemy/services"
     "go-gin-udemy/dto"
     "net/http"
