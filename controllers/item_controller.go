@@ -128,13 +128,21 @@ func (c *ItemController) Update(ctx *gin.Context) {
 }
 
 func (c *ItemController) Delete(ctx *gin.Context) {
+    user, exists := ctx.Get("user")
+    if !exists {
+        ctx.AbortWithStatus(http.StatusUnauthorized)
+        return
+    }
+
+    userId := user.(*models.User).ID
+
     itemId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
     if err != nil {
         ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
         return 
     }
 
-    err = c.service.Delete(uint(itemId))    
+    err = c.service.Delete(uint(itemId), userId)    
     if err != nil {
         if err.Error() == "Item not found" {
             ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})

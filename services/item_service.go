@@ -12,7 +12,7 @@ type IItemServices interface {
     FindById(itemId uint, userId uint) (*models.Item, error)
     Create(createItemInput dto.CreateItemInput, userId uint) (*models.Item, error)
     Update(itemId uint, userId uint,updateItemInput dto.UpdateItemInput) (*models.Item, error)
-    Delete(itemId uint) error
+    Delete(itemId uint,userId uint) error
 }
 
 // サービスの構造体定義
@@ -79,6 +79,6 @@ func (s *ItemServices) Update(itemId uint, userId uint,updateItemInput dto.Updat
     return s.repository.Update(*targetItem)
 }
 
-func (s *ItemServices) Delete(itemId uint) error {
-    return s.repository.Delete(itemId)
+func (s *ItemServices) Delete(itemId uint, userId uint) error {
+    return s.repository.Delete(itemId,userId)
 }
