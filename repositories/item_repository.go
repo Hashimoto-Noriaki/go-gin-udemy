@@ -9,7 +9,7 @@ import (
 // IItemRepository インターフェースの定義
 type IItemRepository interface {
 	FindAll() (*[]models.Item, error)
-	FindById(itemId uint) (*models.Item, error)
+	FindById(itemId uint, userId uint) (*models.Item, error)
 	Create(newItem models.Item) (*models.Item, error)
 	Update(updateItem models.Item) (*models.Item, error)
 	Delete(itemId uint) error
@@ -35,9 +35,9 @@ func (r *ItemRepository) FindAll() (*[]models.Item, error) {
 }
 
 // IDに基づくデータ取得
-func (r *ItemRepository) FindById(itemId uint) (*models.Item, error) {
+func (r *ItemRepository) FindById(itemId uint, userId uint) (*models.Item, error) {
 	var item models.Item
-	result := r.db.First(&item, itemId)
+	result := r.db.First(&item, "id = ? AND user_id = ?",itemId,userId)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) { // gorm.ErrRecordNotFoundをチェック
 		return nil, errors.New("Item not found")
 	}
