@@ -10,7 +10,7 @@ import (
 type IItemServices interface {
     FindAll() (*[]models.Item, error)
     FindById(itemId uint) (*models.Item, error) // 引数を uint に修正
-    Create(createItemInput dto.CreateItemInput) (*models.Item, error)
+    Create(createItemInput dto.CreateItemInput,userId uint) (*models.Item, error)
     Update(itemId uint, updateItemInput dto.UpdateItemInput) (*models.Item, error)
     Delete(itemId uint )error
 }
@@ -36,12 +36,13 @@ func (s *ItemServices) FindById(itemId uint) (*models.Item, error) {
 }
 
 // Createメソッドの定義
-func (s *ItemServices) Create(createItemInput dto.CreateItemInput) (*models.Item, error) {
+func (s *ItemServices) Create(createItemInput dto.CreateItemInput,userId uint) (*models.Item, error) {
     newItem := models.Item{
         Name:        createItemInput.Name,
         Price:       createItemInput.Price,
         Description: createItemInput.Description,
         SoldOut:     false,
+        userID: userId,
     }
     return s.repository.Create(newItem)
 }
