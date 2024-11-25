@@ -41,5 +41,9 @@ https://github.com/golang-jwt/jwt?tab=readme-ov-file#installation-guidelines
 
 https://jwt.io/
 
+### cors
+
+https://github.com/gin-contrib/cors
+
 
 
