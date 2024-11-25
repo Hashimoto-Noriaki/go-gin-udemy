@@ -48,6 +48,8 @@ func (c *ItemController) FindById(ctx *gin.Context) {
         return 
     }
 
+    item, err := c.service.FindById(uint(itemId), userId)
+
     // uintにキャスト
     itemIdUint := uint(itemId)
 
